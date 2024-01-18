@@ -2,8 +2,8 @@
 #include "tusb.h"
 
 #define I2C_PORT i2c0
-#define I2C_SDA 4
-#define I2C_SCL 5
+#define I2C_SDA 12
+#define I2C_SCL 13
 
 BNO055 imu(I2C_PORT);
 
@@ -29,9 +29,9 @@ int main() {
         return 1;
     }
 
-    float gyro_x, gyro_y, gyro_z;
-    float mag_x, mag_y, mag_z;
-    float accel_x, accel_y, accel_z;
+    double gyro_x, gyro_y, gyro_z;
+    double mag_x, mag_y, mag_z;
+    double accel_x, accel_y, accel_z;
 
     while (true) {
 

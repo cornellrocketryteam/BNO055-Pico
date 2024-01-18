@@ -10,8 +10,8 @@ bool BNO055::begin() {
     uint8_t config[2];
     uint8_t id = get_id();
 
-    if (id != 0xA0) {
-        fprintf(stderr, "Error: Got chip id value of %d\n", id);
+    if (id != BNO055_CHIP_ID) {
+        fprintf(stderr, "Error: IMU got chip ID value of %d\n", id);
         return false;
     }
 
@@ -28,19 +28,21 @@ bool BNO055::begin() {
     return true;
 }
 
-bool BNO055::read_gyro(float *x, float *y, float *z) {
+bool BNO055::read_gyro(double *x, double *y, double *z) {
     return read_data(x, y, z, 0);
 }
 
-bool BNO055::read_mag(float *x, float *y, float *z) {
+bool BNO055::read_mag(double *x, double *y, double *z) {
     return read_data(x, y, z, 1);
 }
 
-bool BNO055::read_accel(float *x, float *y, float *z) {
+bool BNO055::read_accel(double *x, double *y, double *z) {
     return read_data(x, y, z, 2);
 }
 
-bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
+bool BNO055::read_data(double *x, double *y, double *z, int sensor) {
+    int ret;
+
     int16_t data_x, data_y, data_z;
     uint8_t data_b[6];
 
@@ -55,16 +57,23 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
         reg[0] = BNO055_ACCEL_X_LSB;
     }
 
-    i2c_write_blocking(i2c, BNO055_ADDR, reg, 1, true);
-    i2c_read_blocking(i2c, BNO055_ADDR, data_b, 6, false);
+    ret = i2c_write_blocking(i2c, BNO055_ADDR, reg, 1, true);
+    if (ret < 1) {
+        return false;
+    }
+
+    ret = i2c_read_blocking(i2c, BNO055_ADDR, data_b, 6, false);
+    if (ret < 1) {
+        return false;
+    }
 
     data_x = (data_b[1] << 8) | data_b[0];
     data_y = (data_b[3] << 8) | data_b[2];
     data_z = (data_b[5] << 8) | data_b[4];
 
-    *x = (float)data_x / 100.0;
-    *y = (float)data_y / 100.0;
-    *z = (float)data_z / 100.0;
+    *x = (double)data_x / 100.0;
+    *y = (double)data_y / 100.0;
+    *z = (double)data_z / 100.0;
 
     return true;
 }
