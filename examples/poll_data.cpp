@@ -29,9 +29,9 @@ int main() {
         return 1;
     }
 
-    double gyro_x, gyro_y, gyro_z;
-    double mag_x, mag_y, mag_z;
-    double accel_x, accel_y, accel_z;
+    float gyro_x, gyro_y, gyro_z;
+    float mag_x, mag_y, mag_z;
+    float accel_x, accel_y, accel_z;
 
     while (true) {
 

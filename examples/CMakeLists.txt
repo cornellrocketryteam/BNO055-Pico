@@ -16,15 +16,15 @@ add_compile_options(
     -Wno-unused-function
 )
 
-add_executable(imu
+add_executable(${PROJECT_NAME}
     poll_data.cpp
     ../bno055.cpp
 )
 # Pull in common dependencies
-target_link_libraries(imu pico_stdlib hardware_i2c)
+target_link_libraries(${PROJECT_NAME} pico_stdlib hardware_i2c)
 
-pico_enable_stdio_usb(imu 1)
-pico_enable_stdio_uart(imu 0)
+pico_enable_stdio_usb(${PROJECT_NAME} 1)
+pico_enable_stdio_uart(${PROJECT_NAME} 0)
 
 # Create map/bin/hex file etc.
-pico_add_extra_outputs(imu)
+pico_add_extra_outputs(${PROJECT_NAME})
