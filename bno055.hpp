@@ -1,8 +1,8 @@
 #ifndef BNO055_HPP
 #define BNO055_HPP
 
-#include "pico/stdlib.h"
 #include "hardware/i2c.h"
+#include "pico/stdlib.h"
 
 #define BNO055_ADDR (0x28)
 
@@ -65,7 +65,7 @@ private:
      * @return The resulting electronic ID
      */
     uint8_t get_id();
-    
+
     /**
      * Reads 3-axis data values in meters per second squared.
      * @param x The resulting x-axis acceleration

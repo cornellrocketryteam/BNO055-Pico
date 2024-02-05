@@ -1,7 +1,6 @@
 #include "bno055.hpp"
 #include <cstdio>
 
-
 BNO055::BNO055(i2c_inst_t *i2c_type) {
     i2c = i2c_type;
 }
@@ -55,11 +54,9 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
     uint8_t reg[1];
     if (sensor == 0) {
         reg[0] = BNO055_GYRO_X_LSB;
-    }
-    else if (sensor == 1) {
+    } else if (sensor == 1) {
         reg[0] = BNO055_MAG_X_LSB;
-    }
-    else {
+    } else {
         reg[0] = BNO055_ACCEL_X_LSB;
     }
 
@@ -85,7 +82,7 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
 }
 
 uint8_t BNO055::get_id() {
-    uint8_t reg[1] = { BNO055_CHIP_ID };
+    uint8_t reg[1] = {BNO055_CHIP_ID};
     uint8_t val[1];
 
     i2c_write_blocking(i2c, BNO055_ADDR, reg, 1, true);
