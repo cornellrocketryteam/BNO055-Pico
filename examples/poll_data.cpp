@@ -38,7 +38,7 @@ int main() {
         imu.read_gyro(&gyro_x, &gyro_y, &gyro_z);
         imu.read_mag(&mag_x, &mag_y, &mag_z);
         imu.read_accel(&accel_x, &accel_y, &accel_z);
-        
+
         printf("Gyro X: %.3f\n", gyro_x);
         printf("Gyro Y: %.3f\n", gyro_y);
         printf("Gyro Z: %.3f\n\n", gyro_z);
@@ -53,5 +53,4 @@ int main() {
 
         sleep_ms(200);
     }
-
 }

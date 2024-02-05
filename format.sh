@@ -1,4 +1,4 @@
 #!/bin/bash
-# Format all C and C++ source files in src/
+# Format all C and C++ source files in ./
 
 clang-format -i ./*.cpp ./*.hpp
