@@ -18,6 +18,21 @@
 #define BNO055_OPR_MODE (0x3D)
 #define BNO055_UNIT_SEL (0x3B)
 
+enum class OpMode : uint8_t {
+    ACC_ONLY = 0b00000001,
+    MAG_ONLY = 0b00000010,
+    GYRO_ONLY = 0b00000011,
+    ACC_MAG = 0b00000100,
+    ACC_GYRO = 0b00000101,
+    MAG_GYRO = 0b00000110,
+    AMG = 0b00000111,
+    IMU = 0b00001000,
+    COMPASS = 0b00001001,
+    M4G = 0b00001010,
+    NDOF_FMC_OFF = 0b00001011,
+    NDOF = 0b00001100
+};
+
 /**
  * Representation of the BNO055 sensor.
  */
@@ -33,7 +48,7 @@ public:
      * Attempts to establish a connection with the sensor and sets configuration options.
      * @return True on successful connection, false otherwise
      */
-    bool begin(int g_range=2);
+    bool begin(int g_range = 2, OpMode op_mode = OpMode::IMU);
 
      /**
      * Reads 3-axis gyro acceleration values in meters per second squared.

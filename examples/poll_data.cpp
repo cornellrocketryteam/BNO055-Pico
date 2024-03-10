@@ -22,7 +22,7 @@ int main() {
     }
     printf("Connected\n");
 
-    if (imu.begin(4)) {
+    if (imu.begin(2, OpMode::IMU)) {
         printf("Init successful\n");
     } else {
         printf("Init failed\n");
@@ -30,15 +30,13 @@ int main() {
     }
 
     float gyro_x, gyro_y, gyro_z;
-    // float mag_x, mag_y, mag_z;
     float accel_x, accel_y, accel_z;
-    float grav_x, grav_y, grav_z;
     float orientation_x, orientation_y, orientation_z;
+    float grav_x, grav_y, grav_z;
 
     while (true) {
 
         imu.read_gyro(&gyro_x, &gyro_y, &gyro_z);
-        // imu.read_mag(&mag_x, &mag_y, &mag_z);
         imu.read_accel(&accel_x, &accel_y, &accel_z);
         imu.read_orientation(&orientation_x, &orientation_y, &orientation_z);
         imu.read_gravity(&grav_x, &grav_y, &grav_z);
@@ -46,10 +44,6 @@ int main() {
         printf("Gyro X: %.3f\n", gyro_x);
         printf("Gyro Y: %.3f\n", gyro_y);
         printf("Gyro Z: %.3f\n\n", gyro_z);
-
-        // printf("Mag X: %.3f\n", mag_x);
-        // printf("Mag Y: %.3f\n", mag_y);
-        // printf("Mag Z: %.3f\n\n", mag_z);
 
         printf("Accel X: %6.2f\n", accel_x);
         printf("Accel Y: %6.2f\n", accel_y);
@@ -61,7 +55,9 @@ int main() {
 
         printf("Gravity X: %6.2f\n", grav_x);
         printf("Gravity Y: %6.2f\n", grav_y);
-        printf("gravity Z: %6.2f\n\n", grav_z);
+        printf("Gravity Z: %6.2f\n\n", grav_z);
+
+        printf("----------------------------------------\n\n");
 
         sleep_ms(200);
     }

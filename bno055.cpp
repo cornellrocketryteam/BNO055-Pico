@@ -5,7 +5,7 @@ BNO055::BNO055(i2c_inst_t *i2c_type) {
     i2c = i2c_type;
 }
 
-bool BNO055::begin(int g_range) {
+bool BNO055::begin(int g_range, OpMode op_mode) {
     uint8_t config[2];
     uint8_t id = get_id();
 
@@ -25,7 +25,7 @@ bool BNO055::begin(int g_range) {
     // sleep_ms(30);
 
     config[0] = BNO055_OPR_MODE;
-    config[1] = 0b00001000;
+    config[1] = static_cast<uint8_t>(op_mode);
     ret = i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true);
     if (ret < 1) {
         return false;
@@ -53,7 +53,6 @@ bool BNO055::begin(int g_range) {
         return false;
     }
     ret = i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true);
-    printf("after write");
     if (ret < 1) {
         return false;
     }
