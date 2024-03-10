@@ -8,10 +8,13 @@
 
 #define BNO055_CHIP_ID (0xA0)
 
+#define BNO055_ACCEL_X_LSB (0x08)
 #define BNO055_GYRO_X_LSB (0x14)
 #define BNO055_MAG_X_LSB (0x0E)
-#define BNO055_ACCEL_X_LSB (0x08)
+#define BNO055_EUL_DATA_X_LSB (0x1A)
+#define BNO055_GRV_DATA_X_LSB (0x2E)
 
+#define BNO055_ACC_CONFIG (0x08)
 #define BNO055_OPR_MODE (0x3D)
 #define BNO055_UNIT_SEL (0x3B)
 
@@ -30,7 +33,7 @@ public:
      * Attempts to establish a connection with the sensor and sets configuration options.
      * @return True on successful connection, false otherwise
      */
-    bool begin();
+    bool begin(int g_range=2);
 
      /**
      * Reads 3-axis gyro acceleration values in meters per second squared.
@@ -58,6 +61,24 @@ public:
      * @return True on successful read, false otherwise
      */
     bool read_accel(float *x, float *y, float *z);
+
+    /**
+     * Reads 3-axis gyro acceleration values in meters per second squared.
+     * @param x The resulting x-axis acceleration
+     * @param y The resulting y-axis acceleration
+     * @param z The resulting z-axis acceleration
+     * @return True on successful read, false otherwise
+     */
+    bool read_orientation(float *x, float *y, float *z);
+
+    /**
+     * Reads 3-axis gyro acceleration values in meters per second squared.
+     * @param x The resulting x-axis acceleration
+     * @param y The resulting y-axis acceleration
+     * @param z The resulting z-axis acceleration
+     * @return True on successful read, false otherwise
+     */
+    bool read_gravity(float *x, float *y, float *z);
 
 private:
     /**

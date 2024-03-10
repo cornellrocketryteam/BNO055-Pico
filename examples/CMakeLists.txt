@@ -16,6 +16,8 @@ add_compile_options(
     -Wno-unused-function
 )
 
+add_definitions(-DVERBOSE)
+
 add_executable(${PROJECT_NAME}
     poll_data.cpp
     ../bno055.cpp

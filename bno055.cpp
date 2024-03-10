@@ -5,7 +5,7 @@ BNO055::BNO055(i2c_inst_t *i2c_type) {
     i2c = i2c_type;
 }
 
-bool BNO055::begin() {
+bool BNO055::begin(int g_range) {
     uint8_t config[2];
     uint8_t id = get_id();
 
@@ -16,21 +16,48 @@ bool BNO055::begin() {
         return false;
     }
 
-    config[0] = BNO055_UNIT_SEL;
-    config[1] = 0b0001000;
-    ret = i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true);
-    if (ret < 1) {
-        return false;
-    }
-    sleep_ms(30);
+    // config[0] = BNO055_UNIT_SEL;
+    // config[1] = 0b0001000;
+    // ret = i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true);
+    // if (ret < 1) {
+    //     return false;
+    // }
+    // sleep_ms(30);
 
     config[0] = BNO055_OPR_MODE;
-    config[1] = 0b00000111;
+    config[1] = 0b00001000;
     ret = i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true);
     if (ret < 1) {
         return false;
     }
     sleep_ms(100);
+
+    config[0] = BNO055_ACC_CONFIG;
+    switch (g_range) {
+    case 2:
+        config[1] = 0b00000000;
+        break;
+    case 4:
+        config[1] = 0b00000001;
+        break;
+    case 8:
+        config[1] = 0b00000010;
+        break;
+    case 16:
+        config[1] = 0b00000011;
+        break;
+    default:
+#ifdef VERBOSE
+        fprintf(stderr, "Error: Invalid G range\n");
+#endif
+        return false;
+    }
+    ret = i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true);
+    printf("after write");
+    if (ret < 1) {
+        return false;
+    }
+    sleep_ms(30);
 
     return true;
 }
@@ -47,17 +74,36 @@ bool BNO055::read_accel(float *x, float *y, float *z) {
     return read_data(x, y, z, 2);
 }
 
+bool BNO055::read_orientation(float *x, float *y, float *z) {
+    return read_data(x, y, z, 3);
+}
+
+bool BNO055::read_gravity(float *x, float *y, float *z) {
+    return read_data(x, y, z, 4);
+}
+
 bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
     int16_t data_x, data_y, data_z;
     uint8_t data_b[6];
 
     uint8_t reg[1];
-    if (sensor == 0) {
+    switch (sensor) {
+    default:
+    case 0:
         reg[0] = BNO055_GYRO_X_LSB;
-    } else if (sensor == 1) {
-        reg[0] = BNO055_MAG_X_LSB;
-    } else {
+        break;
+    case 1:
+        reg[0] = BNO055_MAG_X_LSB; // WILL NOT WORK IN FUSION MODE
+        break;
+    case 2:
         reg[0] = BNO055_ACCEL_X_LSB;
+        break;
+    case 3:
+        reg[0] = BNO055_EUL_DATA_X_LSB;
+        break;
+    case 4:
+        reg[0] = BNO055_GRV_DATA_X_LSB;
+        break;
     }
 
     ret = i2c_write_blocking(i2c, BNO055_ADDR, reg, 1, true);
