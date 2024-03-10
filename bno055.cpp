@@ -7,22 +7,14 @@ BNO055::BNO055(i2c_inst_t *i2c_type) {
 
 bool BNO055::begin(int g_range, OpMode op_mode) {
     uint8_t config[2];
-    uint8_t id = get_id();
 
+    uint8_t id = get_id();
     if (id != BNO055_CHIP_ID) {
 #ifdef VERBOSE
         fprintf(stderr, "Error: IMU got chip ID value of %d\n", id);
 #endif
         return false;
     }
-
-    // config[0] = BNO055_UNIT_SEL;
-    // config[1] = 0b0001000;
-    // ret = i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true);
-    // if (ret < 1) {
-    //     return false;
-    // }
-    // sleep_ms(30);
 
     config[0] = BNO055_OPR_MODE;
     config[1] = static_cast<uint8_t>(op_mode);
@@ -92,7 +84,7 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
         reg[0] = BNO055_GYRO_X_LSB;
         break;
     case 1:
-        reg[0] = BNO055_MAG_X_LSB; // WILL NOT WORK IN FUSION MODE
+        reg[0] = BNO055_MAG_X_LSB;
         break;
     case 2:
         reg[0] = BNO055_ACCEL_X_LSB;

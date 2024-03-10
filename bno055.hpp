@@ -18,6 +18,10 @@
 #define BNO055_OPR_MODE (0x3D)
 #define BNO055_UNIT_SEL (0x3B)
 
+/**
+ * Operating modes of the sensor, as defined in
+ * section 3.3 of the BNO055 datasheet.
+ */
 enum class OpMode : uint8_t {
     ACC_ONLY = 0b00000001,
     MAG_ONLY = 0b00000010,
@@ -51,10 +55,10 @@ public:
     bool begin(int g_range = 2, OpMode op_mode = OpMode::IMU);
 
      /**
-     * Reads 3-axis gyro acceleration values in meters per second squared.
-     * @param x The resulting x-axis acceleration
-     * @param y The resulting y-axis acceleration
-     * @param z The resulting z-axis acceleration
+     * Reads 3-axis angular rate values, in degrees per second.
+     * @param x The resulting x-axis velocity
+     * @param y The resulting y-axis velocity
+     * @param z The resulting z-axis velocity
      * @return True on successful read, false otherwise
      */
     bool read_gyro(float *x, float *y, float *z);
@@ -78,19 +82,19 @@ public:
     bool read_accel(float *x, float *y, float *z);
 
     /**
-     * Reads 3-axis gyro acceleration values in meters per second squared.
-     * @param x The resulting x-axis acceleration
-     * @param y The resulting y-axis acceleration
-     * @param z The resulting z-axis acceleration
+     * Reads 3-axis euler angle values in degrees.
+     * @param x The resulting x-axis euler angle
+     * @param y The resulting y-axis euler angle
+     * @param z The resulting z-axis euler angle
      * @return True on successful read, false otherwise
      */
     bool read_orientation(float *x, float *y, float *z);
 
     /**
-     * Reads 3-axis gyro acceleration values in meters per second squared.
-     * @param x The resulting x-axis acceleration
-     * @param y The resulting y-axis acceleration
-     * @param z The resulting z-axis acceleration
+     * Reads 3-axis gravity vector values in meters per second squared.
+     * @param x The resulting x-axis gravity vector
+     * @param y The resulting y-axis gravity vector
+     * @param z The resulting z-axis gravity vector
      * @return True on successful read, false otherwise
      */
     bool read_gravity(float *x, float *y, float *z);
