@@ -50,6 +50,8 @@ public:
 
     /**
      * Attempts to establish a connection with the sensor and sets configuration options.
+     * @param g_range The full-scale range of the sensor
+     * @param op_mode The operating mode of the sensor
      * @return True on successful connection, false otherwise
      */
     bool begin(int g_range = 2, OpMode op_mode = OpMode::IMU);
