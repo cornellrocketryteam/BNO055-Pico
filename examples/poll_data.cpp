@@ -10,7 +10,7 @@ BNO055 imu(I2C_PORT);
 int main() {
     stdio_init_all();
 
-    i2c_init(I2C_PORT, 100 * 1000);
+    i2c_init(I2C_PORT, 400 * 1000);
     gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
     gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
 
@@ -59,6 +59,6 @@ int main() {
 
         printf("----------------------------------------\n\n");
 
-        sleep_ms(200);
+        sleep_ms(20);
     }
 }

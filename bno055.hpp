@@ -20,7 +20,7 @@
 
 /**
  * Operating modes of the sensor, as defined in
- * section 3.3 of the BNO055 datasheet.
+ * section 3.3 of the BNO055 datasheet
  */
 enum class OpMode : uint8_t {
     ACC_ONLY = 0b00000001,
@@ -38,7 +38,7 @@ enum class OpMode : uint8_t {
 };
 
 /**
- * Representation of the BNO055 sensor.
+ * Representation of the BNO055 sensor
  */
 class BNO055 {
 public:
@@ -101,6 +101,13 @@ public:
      */
     bool read_gravity(float *x, float *y, float *z);
 
+    /**
+     * Sets the operating mode of the sennsor.
+     * @param op_mode The mode to set
+     * @return True on successful set, false otherwise
+     */
+    bool set_op_mode(OpMode op_mode);
+
 private:
     /**
      * Reads the BNO055's electronic ID.
@@ -119,12 +126,7 @@ private:
     bool read_data(float *x, float *y, float *z, int sensor);
 
     /**
-     * Return value for I2C reads and writes.
-     */
-    int ret;
-
-    /**
-     * The I2C bus.
+     * The I2C bus
      */
     i2c_inst_t *i2c;
 };

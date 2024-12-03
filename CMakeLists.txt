@@ -5,6 +5,6 @@ target_sources(BNO055-Pico INTERFACE
 )
 
 target_link_libraries(BNO055-Pico INTERFACE
-    hardware_i2c
     pico_stdlib
+    hardware_i2c
 )

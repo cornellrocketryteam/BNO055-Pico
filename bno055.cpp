@@ -6,8 +6,6 @@ BNO055::BNO055(i2c_inst_t *i2c_type) {
 }
 
 bool BNO055::begin(int g_range, OpMode op_mode) {
-    uint8_t config[2];
-
     uint8_t id = get_id();
     if (id != BNO055_CHIP_ID) {
 #ifdef VERBOSE
@@ -16,13 +14,14 @@ bool BNO055::begin(int g_range, OpMode op_mode) {
         return false;
     }
 
-    config[0] = BNO055_OPR_MODE;
-    config[1] = static_cast<uint8_t>(op_mode);
-    ret = i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true);
-    if (ret < 1) {
+    if (!set_op_mode(op_mode)) {
+#ifdef VERBOSE
+        fprintf(stderr, "Error: IMU could not set operating mode");
+#endif
         return false;
     }
-    sleep_ms(100);
+
+    uint8_t config[2];
 
     config[0] = BNO055_ACC_CONFIG;
     switch (g_range) {
@@ -40,12 +39,12 @@ bool BNO055::begin(int g_range, OpMode op_mode) {
         break;
     default:
 #ifdef VERBOSE
-        fprintf(stderr, "Error: Invalid G range\n");
+        fprintf(stderr, "Error: Invalid G range for IMU\n");
 #endif
         return false;
     }
-    ret = i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true);
-    if (ret < 1) {
+
+    if (i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true) < 1) {
         return false;
     }
     sleep_ms(30);
@@ -77,33 +76,30 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
     int16_t data_x, data_y, data_z;
     uint8_t data_b[6];
 
-    uint8_t reg[1];
+    uint8_t reg;
     switch (sensor) {
     default:
     case 0:
-        reg[0] = BNO055_GYRO_X_LSB;
+        reg = BNO055_GYRO_X_LSB;
         break;
     case 1:
-        reg[0] = BNO055_MAG_X_LSB;
+        reg = BNO055_MAG_X_LSB;
         break;
     case 2:
-        reg[0] = BNO055_ACCEL_X_LSB;
+        reg = BNO055_ACCEL_X_LSB;
         break;
     case 3:
-        reg[0] = BNO055_EUL_DATA_X_LSB;
+        reg = BNO055_EUL_DATA_X_LSB;
         break;
     case 4:
-        reg[0] = BNO055_GRV_DATA_X_LSB;
+        reg = BNO055_GRV_DATA_X_LSB;
         break;
     }
 
-    ret = i2c_write_blocking(i2c, BNO055_ADDR, reg, 1, true);
-    if (ret < 1) {
+    if (i2c_write_blocking(i2c, BNO055_ADDR, &reg, 1, true) < 1) {
         return false;
     }
-
-    ret = i2c_read_blocking(i2c, BNO055_ADDR, data_b, 6, false);
-    if (ret < 1) {
+    if (i2c_read_blocking(i2c, BNO055_ADDR, data_b, 6, false) < 1) {
         return false;
     }
 
@@ -118,12 +114,24 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
     return true;
 }
 
+bool BNO055::set_op_mode(OpMode op_mode) {
+    uint8_t config[2];
+    config[0] = BNO055_OPR_MODE;
+    config[1] = static_cast<uint8_t>(op_mode);
+    if (i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true) < 1) {
+        return false;
+    }
+    sleep_ms(100); // TODO: Look at this
+
+    return true;
+}
+
 uint8_t BNO055::get_id() {
-    uint8_t reg[1] = {BNO055_CHIP_ID};
-    uint8_t val[1];
+    uint8_t reg = BNO055_CHIP_ID;
+    uint8_t val;
 
-    i2c_write_blocking(i2c, BNO055_ADDR, reg, 1, true);
-    i2c_read_blocking(i2c, BNO055_ADDR, val, 1, false);
+    i2c_write_blocking(i2c, BNO055_ADDR, &reg, 1, true);
+    i2c_read_blocking(i2c, BNO055_ADDR, &val, 1, false);
 
-    return val[0];
+    return val;
 }
