@@ -22,11 +22,8 @@ int main() {
     }
     printf("Connected\n");
 
-    if (imu.begin(2, OpMode::IMU)) {
-        printf("Init successful\n");
-    } else {
-        printf("Init failed\n");
-        return 1;
+    while (!imu.begin(2, OpMode::IMU)) {
+        printf("Error: IMU failed to initialize\n");
     }
 
     float gyro_x, gyro_y, gyro_z;
@@ -35,7 +32,6 @@ int main() {
     float grav_x, grav_y, grav_z;
 
     while (true) {
-
         imu.read_gyro(&gyro_x, &gyro_y, &gyro_z);
         imu.read_accel(&accel_x, &accel_y, &accel_z);
         imu.read_orientation(&orientation_x, &orientation_y, &orientation_z);
