@@ -44,7 +44,7 @@ bool BNO055::begin(int g_range, OpMode op_mode) {
         return false;
     }
 
-    if (i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true) < 1) {
+    if (i2c_write_timeout_us(i2c, BNO055_ADDR, config, 2, true, 2 * BYTE_TIMEOUT_US) < 1) {
         return false;
     }
     sleep_ms(30);
@@ -96,10 +96,10 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
         break;
     }
 
-    if (i2c_write_blocking(i2c, BNO055_ADDR, &reg, 1, true) < 1) {
+    if (i2c_write_timeout_us(i2c, BNO055_ADDR, &reg, 1, true, BYTE_TIMEOUT_US) < 1) {
         return false;
     }
-    if (i2c_read_blocking(i2c, BNO055_ADDR, data_b, 6, false) < 1) {
+    if (i2c_read_timeout_us(i2c, BNO055_ADDR, data_b, 6, false, 6 * BYTE_TIMEOUT_US) < 1) {
         return false;
     }
 
@@ -118,7 +118,7 @@ bool BNO055::set_op_mode(OpMode op_mode) {
     uint8_t config[2];
     config[0] = BNO055_OPR_MODE;
     config[1] = static_cast<uint8_t>(op_mode);
-    if (i2c_write_blocking(i2c, BNO055_ADDR, config, 2, true) < 1) {
+    if (i2c_write_timeout_us(i2c, BNO055_ADDR, config, 2, true, 2 * BYTE_TIMEOUT_US) < 1) {
         return false;
     }
     sleep_ms(100); // TODO: Look at this
@@ -130,8 +130,8 @@ uint8_t BNO055::get_id() {
     uint8_t reg = BNO055_CHIP_ID;
     uint8_t val;
 
-    i2c_write_blocking(i2c, BNO055_ADDR, &reg, 1, true);
-    i2c_read_blocking(i2c, BNO055_ADDR, &val, 1, false);
+    i2c_write_timeout_us(i2c, BNO055_ADDR, &reg, 1, true, BYTE_TIMEOUT_US);
+    i2c_read_timeout_us(i2c, BNO055_ADDR, &val, 1, false, BYTE_TIMEOUT_US);
 
     return val;
 }
