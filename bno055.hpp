@@ -18,7 +18,7 @@
 #define BNO055_OPR_MODE (0x3D)
 #define BNO055_UNIT_SEL (0x3B)
 
-#define BYTE_TIMEOUT_US (1000)
+#define BNO055_BYTE_TIMEOUT_US (1000)
 
 /**
  * Operating modes of the sensor, as defined in
