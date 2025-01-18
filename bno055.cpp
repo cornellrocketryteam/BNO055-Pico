@@ -77,6 +77,8 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
     uint8_t data_b[6];
 
     uint8_t reg;
+    float scale = 100;
+
     switch (sensor) {
     default:
     case 0:
@@ -90,6 +92,7 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
         break;
     case 3:
         reg = BNO055_EUL_DATA_X_LSB;
+        scale = 16;
         break;
     case 4:
         reg = BNO055_GRV_DATA_X_LSB;
@@ -107,9 +110,9 @@ bool BNO055::read_data(float *x, float *y, float *z, int sensor) {
     data_y = (data_b[3] << 8) | data_b[2];
     data_z = (data_b[5] << 8) | data_b[4];
 
-    *x = (float)data_x / 100.0;
-    *y = (float)data_y / 100.0;
-    *z = (float)data_z / 100.0;
+    *x = (float)data_x / scale;
+    *y = (float)data_y / scale;
+    *z = (float)data_z / scale;
 
     return true;
 }
